@@ -1,0 +1,14 @@
+use_frameworks!
+
+platform :ios, '11.0'
+
+target 'EventTracing-iOS-Debug_Example' do
+  pod 'EventTracing-iOS-Debug', :path => '../'
+  pod 'EventTracing-iOS', :path => '../../EventTracing-iOS'
+
+  target 'EventTracing-iOS-Debug_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
