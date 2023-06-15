@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <EventTracing/EventTracing.h>
+#import <EventTracing/NEEventTracing.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,9 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, weak) id<EventTracingInspectNodeInfoPanelViewDelegate> delegate;
 
-@property(nonatomic, strong, readonly) EventTracingVTreeNode *node;
+@property(nonatomic, strong, readonly) NEEventTracingVTreeNode *node;
 
-- (void)refreshWithNode:(EventTracingVTreeNode *)node;
+- (void)refreshWithNode:(NEEventTracingVTreeNode *)node;
 
 @end
 

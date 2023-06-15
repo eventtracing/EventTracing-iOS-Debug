@@ -10,7 +10,7 @@
 #import "EventTracingInspect2DViewController.h"
 #import "EventTracingInspectEngine+Private.h"
 #import "EventTracingInspectEngine+TwoD.h"
-#import "EventTracingVTree+DebugTool.h"
+#import "NEEventTracingVTree+DebugTool.h"
 #import <BlocksKit/BlocksKit.h>
 
 #pragma clang diagnostic ignored "-Wincomplete-umbrella"
@@ -57,8 +57,8 @@
     self.eventIds = eventIds.copy;
     [self.inspectorWindow.inspectControlBar updateLeftItemName:name highlight:eventIds.count > 0];
     if (eventIds.count) {
-        EventTracingVTreeNode *rootNode = [EventTracingEngine sharedInstance].context.currentVTree.rootNode;
-        [@[rootNode] et_enumerateObjectsUsingBlock:^NSArray * _Nonnull(EventTracingVTreeNode * _Nonnull node, BOOL * _Nonnull stop) {
+        NEEventTracingVTreeNode *rootNode = [NEEventTracingEngine sharedInstance].context.currentVTree.rootNode;
+        [@[rootNode] ne_et_enumerateObjectsUsingBlock:^NSArray * _Nonnull(NEEventTracingVTreeNode * _Nonnull node, BOOL * _Nonnull stop) {
             if (node.view) {
                 [self refreshBadgeViewWithNode:node];
             }
@@ -69,18 +69,18 @@
     }
 }
 
-#pragma mark - EventTracingEventOutputChannel
-- (void)eventOutput:(EventTracingEventOutput *)eventOutput didOutputEvent:(NSString *)event json:(NSDictionary *)json {}
+#pragma mark - NEEventTracingEventOutputChannel
+- (void)eventOutput:(NEEventTracingEventOutput *)eventOutput didOutputEvent:(NSString *)event json:(NSDictionary *)json {}
 
-- (void)eventOutput:(EventTracingEventOutput *)eventOutput
+- (void)eventOutput:(NEEventTracingEventOutput *)eventOutput
      didOutputEvent:(NSString *)event
-               node:(EventTracingVTreeNode * _Nullable)node
+               node:(NEEventTracingVTreeNode * _Nullable)node
                json:(NSDictionary *)json {
     if (!node || !node.view) {
         return;
     }
     
-    ET_DebugToolPushNodeLogRecoard(event, node, json);
+    NE_ET_DebugToolPushNodeLogRecoard(event, node, json);
     
     [self refreshBadgeViewWithNode:node];
 }

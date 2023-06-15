@@ -13,7 +13,7 @@
 #import "EventTracingInspectEngine+TwoD.h"
 #import "EventTracingContextPanelViewController.h"
 
-#import <EventTracing/EventTracingEngine.h>
+#import <EventTracing/NEEventTracingEngine.h>
 
 @interface EventTracingFuncPanelViewController () <EventTracingFuncPanelViewDelegate>
 @property (nonatomic, strong) EventTracingFuncPanelView *panelView;
@@ -65,8 +65,8 @@
 - (void)_setupDataItems {
     _viewModel = [EventTracingPanelViewModel new];
     
-    [_viewModel addItemTitle:@"点击次数" imageName:@"et_debug_click_pv" eventIds:@[ET_EVENT_ID_E_CLCK] remote:NO];
-    [_viewModel addItemTitle:@"曝光次数" imageName:@"et_debug_impress_pv" eventIds:@[ET_EVENT_ID_E_VIEW, ET_EVENT_ID_P_VIEW] remote:NO];
+    [_viewModel addItemTitle:@"点击次数" imageName:@"et_debug_click_pv" eventIds:@[NE_ET_EVENT_ID_E_CLCK] remote:NO];
+    [_viewModel addItemTitle:@"曝光次数" imageName:@"et_debug_impress_pv" eventIds:@[NE_ET_EVENT_ID_E_VIEW, NE_ET_EVENT_ID_P_VIEW] remote:NO];
 }
 
 #pragma mark - getters

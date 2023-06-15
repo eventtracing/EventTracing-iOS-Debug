@@ -8,10 +8,10 @@
 #import "EventTracingInspectEngine+TwoD.h"
 #import "EventTracingInspectEngine+Private.h"
 #import "EventTracing2DContainerViewController.h"
-#import "EventTracingVTree+DebugTool.h"
+#import "NEEventTracingVTree+DebugTool.h"
 #import "UIView+ETBadge.h"
 #import "EventTracingInfoSectionData.h"
-#import <EventTracing/EventTracing.h>
+#import <EventTracing/NEEventTracing.h>
 
 #pragma clang diagnostic ignored "-Wincomplete-umbrella"
 #import <EventTracing/NSArray+ETEnumerator.h>
@@ -21,15 +21,15 @@
 
 @implementation EventTracingInspectEngine (TwoD)
 
-- (void)refreshBadgeViewWithNode:(EventTracingVTreeNode *)node {
-    if ([self.eventIds containsObject:ET_EVENT_ID_P_VIEW] ||
-        [self.eventIds containsObject:ET_EVENT_ID_E_VIEW]) {
+- (void)refreshBadgeViewWithNode:(NEEventTracingVTreeNode *)node {
+    if ([self.eventIds containsObject:NE_ET_EVENT_ID_P_VIEW] ||
+        [self.eventIds containsObject:NE_ET_EVENT_ID_E_VIEW]) {
         NSUInteger viewCount = node.impressLogRecoards.count;
         [node.view et_configViewWithBadge:viewCount visibleFrame:node.view.bounds];
         return;
     }
     
-    if ([self.eventIds containsObject:ET_EVENT_ID_E_CLCK]) {
+    if ([self.eventIds containsObject:NE_ET_EVENT_ID_E_CLCK]) {
         NSUInteger clickCount = node.clickLogRecoards.count;
         [node.view et_configViewWithBadge:clickCount visibleFrame:node.view.bounds];
         return;
@@ -37,8 +37,8 @@
 }
 
 - (void)removeAllBadgeViews {
-    EventTracingVTreeNode *rootNode = [EventTracingEngine sharedInstance].context.currentVTree.rootNode;
-    [@[rootNode] et_enumerateObjectsUsingBlock:^NSArray * _Nonnull(EventTracingVTreeNode * _Nonnull node, BOOL * _Nonnull stop) {
+    NEEventTracingVTreeNode *rootNode = [NEEventTracingEngine sharedInstance].context.currentVTree.rootNode;
+    [@[rootNode] ne_et_enumerateObjectsUsingBlock:^NSArray * _Nonnull(NEEventTracingVTreeNode * _Nonnull node, BOOL * _Nonnull stop) {
         if (node.view) {
             [node.view et_removeBadgeView];
         }

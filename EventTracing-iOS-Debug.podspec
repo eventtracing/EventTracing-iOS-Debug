@@ -33,7 +33,7 @@ Pod::Spec.new do |s|
 
   s.frameworks = 'UIKit'
 
-  s.dependency 'EventTracing-iOS', '~> 1.0.0'
+  s.dependency 'EventTracing'
   s.dependency 'Masonry'
   s.dependency 'BlocksKit', '~> 2.2.5'
 end

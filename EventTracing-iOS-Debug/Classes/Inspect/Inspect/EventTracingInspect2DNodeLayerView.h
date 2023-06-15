@@ -6,16 +6,16 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <EventTracing/EventTracing.h>
+#import <EventTracing/NEEventTracing.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface EventTracingInspect2DNodeLayerView : UIView
 
-@property(nonatomic, strong, readonly) EventTracingVTree *VTree;
-@property(nonatomic, strong, readonly) EventTracingVTreeNode *highlightNode;
+@property(nonatomic, strong, readonly) NEEventTracingVTree *VTree;
+@property(nonatomic, strong, readonly) NEEventTracingVTreeNode *highlightNode;
 
-- (void)drawWithVTree:(EventTracingVTree *)VTree highlightNode:(EventTracingVTreeNode *)node;
+- (void)drawWithVTree:(NEEventTracingVTree *)VTree highlightNode:(NEEventTracingVTreeNode *)node;
 - (void)clear;
 
 @end
