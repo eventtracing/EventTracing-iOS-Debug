@@ -11,11 +11,11 @@
 #import "EventTracingInfoListViewCell.h"
 #import "EventTracingInfoDataItem.h"
 #import <BlocksKit/BlocksKit.h>
-#import <EVentTracing/EventTracing.h>
+#import <EVentTracing/NEEventTracing.h>
 #import "EventTracingInfoListView.h"
 #import "EventTracingInspectNodeInfoUtil.h"
 #import <Masonry/Masonry.h>
-#import <EventTracing/EventTracingMultiReferPatch.h>
+#import <EventTracing/NEEventTracingMultiReferPatch.h>
 
 #define CONTENT_WIDTH (CGRectGetWidth(self.collectionView.bounds) - 2 * 16.0)
 #define CELL_WIDTH (CONTENT_WIDTH - 54.0)
@@ -69,11 +69,11 @@
 
 - (void)setupData {
     /// MARK: 内部重要参数
-    NSString *multirefers = [[EventTracingMultiReferPatch sharedPatch].multiRefers componentsJoinedByString:@","];
+    NSString *multirefers = [[NEEventTracingMultiReferPatch sharedPatch].multiRefers componentsJoinedByString:@","];
     NSArray<EventTracingInfoDataItem *> *internalParams = [@[
-        @{@"key": @"_hsrefer", @"value": [EventTracingEngine sharedInstance].context.hsrefer ?: @""},
+        @{@"key": @"_hsrefer", @"value": [NEEventTracingEngine sharedInstance].context.hsrefer ?: @""},
         @{@"key": @"_multirefer", @"value": multirefers ?: @""},
-        @{@"key": @"_pgstep", @"value": @([EventTracingEngine sharedInstance].context.pgstep).stringValue},
+        @{@"key": @"_pgstep", @"value": @([NEEventTracingEngine sharedInstance].context.pgstep).stringValue},
     ] bk_map:^id(NSDictionary *obj) {
         return [[EventTracingInfoDataItem alloc] initWithKey:obj[@"key"] value:obj[@"value"]];
     }];
@@ -81,14 +81,14 @@
     internalSectionData.colorString = @"#FF5B5B";
     
     /// MARK: RootPage
-    EventTracingVTreeNode *rootPageNode = [[EventTracingEngine sharedInstance].context.currentVTree findToppestRightPageNode];
+    NEEventTracingVTreeNode *rootPageNode = [[NEEventTracingEngine sharedInstance].context.currentVTree findToppestRightPageNode];
     EventTracingInfoSectionData *rootPageNodeSectionData = [EventTracingInspectNodeInfoUtil sectionDataFromNode:rootPageNode];
     rootPageNodeSectionData.title = [NSString stringWithFormat:@"RootPage节点[%@]", rootPageNode.oid ?: @"无"];
     rootPageNodeSectionData.colorString = @"#00B894";
     
     /// MARK: 公参
     NSMutableArray<EventTracingInfoDataItem *> *publicParams = @[].mutableCopy;
-    [[[EventTracingEngine sharedInstance] publicParamsForView:nil] enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL * _Nonnull stop) {
+    [[[NEEventTracingEngine sharedInstance] publicParamsForView:nil] enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL * _Nonnull stop) {
         [publicParams addObject:[[EventTracingInfoDataItem alloc] initWithKey:key value:obj]];
     }];
     EventTracingInfoSectionData *publicSectionData = [[EventTracingInfoSectionData alloc] initWithTitle:@"公参" items:publicParams];

@@ -12,7 +12,7 @@
 #import "EventTracingInspectNodeInfoPanelView.h"
 #import "EventTracingInspectEngine+TwoD.h"
 
-#import <EventTracing/EventTracing.h>
+#import <EventTracing/NEEventTracing.h>
 
 #pragma clang diagnostic ignored "-Wincomplete-umbrella"
 #import <EventTracing/NSArray+ETEnumerator.h>
@@ -132,8 +132,8 @@
 #pragma mark - event
 - (void)_handleTapRecognizer:(UITapGestureRecognizer *)recognizer {
     CGPoint point = [recognizer locationInView:self.view];
-    EventTracingVTreeNode *node = [[EventTracingEngine sharedInstance].context.currentVTree hitTest:point];
-    EventTracingVTree *VTree = node.VTree;
+    NEEventTracingVTreeNode *node = [[NEEventTracingEngine sharedInstance].context.currentVTree hitTest:point];
+    NEEventTracingVTree *VTree = node.VTree;
     
     if (!node || !VTree) {
         [self clearInspectUI];
@@ -143,7 +143,7 @@
     [self _doShowInspectWithNode:node inVTree:VTree];
 }
 
-- (void)_doShowInspectWithNode:(EventTracingVTreeNode *)node inVTree:(EventTracingVTree *)VTree {
+- (void)_doShowInspectWithNode:(NEEventTracingVTreeNode *)node inVTree:(NEEventTracingVTree *)VTree {
     [self showPannelView];
     [self.nodeLayerView drawWithVTree:VTree highlightNode:node];
     [self.nodeInfoPanelView refreshWithNode:node];

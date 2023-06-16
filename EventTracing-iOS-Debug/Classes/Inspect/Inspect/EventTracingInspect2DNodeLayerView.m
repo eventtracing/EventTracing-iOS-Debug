@@ -15,8 +15,8 @@
 #pragma clang diagnostic pop
 
 @interface EventTracingInspect2DNodeLayerView ()
-@property(nonatomic, strong, readwrite) EventTracingVTree *VTree;
-@property(nonatomic, strong, readwrite) EventTracingVTreeNode *highlightNode;
+@property(nonatomic, strong, readwrite) NEEventTracingVTree *VTree;
+@property(nonatomic, strong, readwrite) NEEventTracingVTreeNode *highlightNode;
 
 @property(nonatomic, strong) NSMutableArray<CALayer *> *dequeueNodeLayers;
 @property(nonatomic, strong) NSMutableArray<CALayer *> *showingNodeLayers;
@@ -42,7 +42,7 @@
     return self;
 }
 
-- (void)drawWithVTree:(EventTracingVTree *)VTree highlightNode:(EventTracingVTreeNode *)node {
+- (void)drawWithVTree:(NEEventTracingVTree *)VTree highlightNode:(NEEventTracingVTreeNode *)node {
     self.VTree = VTree;
     self.highlightNode = node;
     
@@ -58,23 +58,23 @@
         return;
     }
     
-    NSMutableArray<EventTracingVTreeNode *> *nodes = @[].mutableCopy;
-    [@[node] et_enumerateObjectsUsingBlock:^NSArray<EventTracingVTreeNode *> * _Nonnull(EventTracingVTreeNode * _Nonnull obj, BOOL * _Nonnull stop) {
+    NSMutableArray<NEEventTracingVTreeNode *> *nodes = @[].mutableCopy;
+    [@[node] ne_et_enumerateObjectsUsingBlock:^NSArray<NEEventTracingVTreeNode *> * _Nonnull(NEEventTracingVTreeNode * _Nonnull obj, BOOL * _Nonnull stop) {
         [nodes insertObject:obj atIndex:0];
         return ((obj.parentNode && !obj.parentNode.isRoot) ? @[obj.parentNode] : nil);
     }];
     
-    [nodes enumerateObjectsUsingBlock:^(EventTracingVTreeNode * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [nodes enumerateObjectsUsingBlock:^(NEEventTracingVTreeNode * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSString *colorString = ETinspect2DLayerColorAt(obj.depth - 1);
         CALayer *layer = [self _addLayerForNode:obj colorString:colorString];
         
         // 当前选中节点背景
-        if ([obj et_isEqualToDiffableObject:node]) {
+        if ([obj ne_et_isEqualToDiffableObject:node]) {
             layer.backgroundColor = [[UIColor et_colorWithHexString:@"#0091FF"] et_colorByMultiplyAlpha:0.3f].CGColor;
         }
         
         // 当前选中节点父节点背景
-        if ([obj et_isEqualToDiffableObject:node.parentNode]) {
+        if ([obj ne_et_isEqualToDiffableObject:node.parentNode]) {
             layer.backgroundColor = [[UIColor et_colorWithHexString:@"#0091FF"] et_colorByMultiplyAlpha:0.1f].CGColor;
         }
 
@@ -127,7 +127,7 @@
     return targetRect;
 }
 
-- (CALayer *)_addLayerForNode:(EventTracingVTreeNode *)node colorString:(NSString *)colorString {
+- (CALayer *)_addLayerForNode:(NEEventTracingVTreeNode *)node colorString:(NSString *)colorString {
     CGRect targetRect = [self _adjustLayerRect:node.visibleRect refRect:self.lastLayerFrame];
 
     CALayer *layer = [self _fetchLayer];
@@ -182,7 +182,7 @@
     return targetRect;
 }
 
-- (CALayer *)_addTagLayerForNode:(EventTracingVTreeNode *)node colorString:(NSString *)colorString visibleRect:(CGRect)visibleRect {
+- (CALayer *)_addTagLayerForNode:(NEEventTracingVTreeNode *)node colorString:(NSString *)colorString visibleRect:(CGRect)visibleRect {
     CGRect targetRect = [self _adjustRect:visibleRect refRect:self.lastTagFrame];
 
     CATextLayer *tagLayer = [self _fetchTagLayer];

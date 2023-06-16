@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)inspectWindowBecomeKeyWindow;
 - (void)inspectWindowResignKeyWindow;
 
-- (void)refreshBadgeViewWithNode:(EventTracingVTreeNode *)node;
+- (void)refreshBadgeViewWithNode:(NEEventTracingVTreeNode *)node;
 - (void)removeAllBadgeViews;
 
 @end

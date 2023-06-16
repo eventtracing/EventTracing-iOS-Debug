@@ -7,15 +7,15 @@
 
 #import <Foundation/Foundation.h>
 #import "EventTracingInfoSectionData.h"
-#import <EventTracing/EventTracingVTreeNode.h>
-#import <EventTracing/EventTracingVTree.h>
+#import <EventTracing/NEEventTracingVTreeNode.h>
+#import <EventTracing/NEEventTracingVTree.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface EventTracingInspectNodeInfoUtil : NSObject
 
-+ (EventTracingInfoSectionData *)sectionDataFromNode:(EventTracingVTreeNode *)node;
-+ (NSArray<EventTracingInfoSectionData *> *)recursionSectionDataFromNode:(EventTracingVTreeNode *)node;
++ (EventTracingInfoSectionData *)sectionDataFromNode:(NEEventTracingVTreeNode *)node;
++ (NSArray<EventTracingInfoSectionData *> *)recursionSectionDataFromNode:(NEEventTracingVTreeNode *)node;
 
 @end
 

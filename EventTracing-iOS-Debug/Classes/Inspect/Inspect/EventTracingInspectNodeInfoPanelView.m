@@ -18,7 +18,7 @@
     CGFloat _panelInsetTop;
     CGFloat _panelInsetBottom;
 }
-@property(nonatomic, strong, readwrite) EventTracingVTreeNode *node;
+@property(nonatomic, strong, readwrite) NEEventTracingVTreeNode *node;
 
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UIButton *closeButton;
@@ -52,7 +52,7 @@
     return self;
 }
 
-- (void)refreshWithNode:(EventTracingVTreeNode *)node {
+- (void)refreshWithNode:(NEEventTracingVTreeNode *)node {
     self.node = node;
 
     NSArray *sectionDatas = [EventTracingInspectNodeInfoUtil recursionSectionDataFromNode:node];

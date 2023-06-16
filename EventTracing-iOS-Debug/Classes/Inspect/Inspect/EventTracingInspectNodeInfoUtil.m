@@ -7,7 +7,7 @@
 
 #import "EventTracingInspectNodeInfoUtil.h"
 #import "EventTracingInfoDataItem.h"
-#import <EventTracing/EventTracing.h>
+#import <EventTracing/NEEventTracing.h>
 
 #pragma clang diagnostic ignored "-Wincomplete-umbrella"
 #import <EventTracing/NSArray+ETEnumerator.h>
@@ -15,9 +15,9 @@
 
 @implementation EventTracingInspectNodeInfoUtil
 
-+ (NSArray<EventTracingInfoSectionData *> *)recursionSectionDataFromNode:(EventTracingVTreeNode *)node {
++ (NSArray<EventTracingInfoSectionData *> *)recursionSectionDataFromNode:(NEEventTracingVTreeNode *)node {
     NSMutableArray *sectionDatas = [NSMutableArray array];
-    [@[node] et_enumerateObjectsUsingBlock:^NSArray * _Nonnull(EventTracingVTreeNode *  _Nonnull obj, BOOL * _Nonnull stop) {
+    [@[node] ne_et_enumerateObjectsUsingBlock:^NSArray * _Nonnull(NEEventTracingVTreeNode *  _Nonnull obj, BOOL * _Nonnull stop) {
         EventTracingInfoSectionData *sectionData = [self sectionDataFromNode:obj];
         [sectionDatas addObject:sectionData];
         return ((obj.parentNode && !obj.parentNode.isRoot) ? @[obj.parentNode] : nil);
@@ -25,7 +25,7 @@
     return sectionDatas;
 }
 
-+ (EventTracingInfoSectionData *)sectionDataFromNode:(EventTracingVTreeNode *)node {
++ (EventTracingInfoSectionData *)sectionDataFromNode:(NEEventTracingVTreeNode *)node {
     NSMutableArray<EventTracingInfoDataItem *> *items = @[].mutableCopy;
     if (!node) {
         return [[EventTracingInfoSectionData alloc] initWithTitle:@"" items:items.copy];
@@ -57,7 +57,7 @@
     return [[EventTracingInfoSectionData alloc] initWithTitle:node.oid items:items.copy];
 }
 
-+ (void)buildNodeConfigData:(EventTracingVTreeNode *)node builder:(void(^)(NSString *key, NSString *value))builder {
++ (void)buildNodeConfigData:(NEEventTracingVTreeNode *)node builder:(void(^)(NSString *key, NSString *value))builder {
     // virtual node
     if (node.isVirtualNode) {
         builder(@"virtual", @"YES(visible_rect是子节点的并集)");
@@ -87,7 +87,7 @@
     builder(@"ignoreReferCascade", @(node.ignoreRefer).stringValue);
 
     // 可见区域的 insets
-    UIEdgeInsets visibleEdgeInsets = node.view.et_visibleEdgeInsets;
+    UIEdgeInsets visibleEdgeInsets = node.view.ne_et_visibleEdgeInsets;
     if (!UIEdgeInsetsEqualToEdgeInsets(visibleEdgeInsets, UIEdgeInsetsZero)) {
         builder(@"insets", [NSString stringWithFormat:@"{t: %@, r: %@, b: %@, l: %@}",
                                                       formatFloat(visibleEdgeInsets.top),
@@ -103,7 +103,7 @@
     }
 
     // visible stategy
-    if (node.view.et_visibleRectCalculateStrategy == ETNodeVisibleRectCalculateStrategyRecursionOnViewTree) {
+    if (node.view.ne_et_visibleRectCalculateStrategy == NEETNodeVisibleRectCalculateStrategyRecursionOnViewTree) {
         builder(@"visible_strategy", @"[RecursionOnViewTree]依赖原始view层级");
     }
 
@@ -112,22 +112,22 @@
         builder(@"blocked", @"不可见: 被子page遮挡");
     }
 
-    if (node.view.et_isAutoMountOnCurrentRootPageEnable) {
+    if (node.view.ne_et_isAutoMountOnCurrentRootPageEnable) {
         builder(@"logical_mount", @"Auto(自动挂载到当前rootpage)");
-    } else if (node.view.et_logicalParentView != nil) {
+    } else if (node.view.ne_et_logicalParentView != nil) {
         builder(@"logical_mount", @"Manual(手动挂载)");
     }
 
     // disable buildin log
-    if (node.buildinEventLogDisableStrategy != ETNodeBuildinEventLogDisableStrategyNone) {
+    if (node.buildinEventLogDisableStrategy != NEETNodeBuildinEventLogDisableStrategyNone) {
         NSMutableString *buildinDisableLogString = @"".mutableCopy;
-        if (node.buildinEventLogDisableStrategy & ETNodeBuildinEventLogDisableStrategyImpress) {
+        if (node.buildinEventLogDisableStrategy & NEETNodeBuildinEventLogDisableStrategyImpress) {
             [buildinDisableLogString appendFormat:@"[impress]"];
         }
-        if (node.buildinEventLogDisableStrategy & ETNodeBuildinEventLogDisableStrategyImpressend) {
+        if (node.buildinEventLogDisableStrategy & NEETNodeBuildinEventLogDisableStrategyImpressend) {
             [buildinDisableLogString appendFormat:@"[impressend]"];
         }
-        if (node.buildinEventLogDisableStrategy & ETNodeBuildinEventLogDisableStrategyClick) {
+        if (node.buildinEventLogDisableStrategy & NEETNodeBuildinEventLogDisableStrategyClick) {
             [buildinDisableLogString appendFormat:@"[click]"];
         }
         builder(@"disable_buildin_log", buildinDisableLogString);
@@ -142,7 +142,7 @@
     }
 }
 
-+ (void)buildNodeParamsData:(EventTracingVTreeNode *)node builder:(void(^)(NSString *key, NSString *value))builder {
++ (void)buildNodeParamsData:(NEEventTracingVTreeNode *)node builder:(void(^)(NSString *key, NSString *value))builder {
     [node.nodeStaticParams enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
         builder([NSString stringWithFormat:@"[Static]%@", key], obj);
     }];
@@ -152,7 +152,7 @@
     }];
 }
 
-+ (void)buildNodeCalculateData:(EventTracingVTreeNode *)node builder:(void(^)(NSString *key, NSString *value))builder {
++ (void)buildNodeCalculateData:(NEEventTracingVTreeNode *)node builder:(void(^)(NSString *key, NSString *value))builder {
     // spm
     builder(@"spm", node.spm ?: @"");
     // scm
@@ -165,8 +165,8 @@
 
     // actseq
     if (node.isPageNode) {
-        EventTracingVTreeNode *rootPageNode = [node.VTree findRootPageNodeFromNode:node];
-        if ([rootPageNode et_isEqualToDiffableObject:node]) {
+        NEEventTracingVTreeNode *rootPageNode = [node.VTree findRootPageNodeFromNode:node];
+        if ([rootPageNode ne_et_isEqualToDiffableObject:node]) {
             builder(@"actseq", @(node.actseq).stringValue);
         }
     }
