@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'EventTracing-iOS-Debug'
-  s.version          = '1.0.0'
+  s.version          = '1.0.2'
   s.summary          = 'EventTracing-iOS-Debug'
 
   s.description      = <<-DESC
